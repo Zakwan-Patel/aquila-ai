@@ -1,6 +1,9 @@
+numpy==1.26.4
+
 fastapi
 uvicorn
 pydantic
+pydantic_settings
 python-dotenv
 
 langchain
