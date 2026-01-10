@@ -5,6 +5,8 @@ python-dotenv
 
 langchain
 langgraph
+langchain-core
+langchain_text_splitters
 
 openai
 tiktoken
@@ -18,3 +20,4 @@ pymysql
 streamlit
 
 pytest
+pypdf
