@@ -1,33 +1,28 @@
-from pathlib import Path
-from typing import List
-from langchain_core.documents import Document
 from pypdf import PdfReader
+from langchain_core.documents import Document
+from app.ingestion.text_cleaner import clean_text
 
 
-def load_pdf(pdf_path: str) -> List[Document]:
-    """
-    Load a PDF and return LangChain Document objects
-    with metadata attached.
-    """
-    pdf_path = Path(pdf_path)
-    reader = PdfReader(pdf_path)
-
+def load_pdf(path: str):
+    reader = PdfReader(path)
     documents = []
 
-    for page_number, page in enumerate(reader.pages):
-        text = page.extract_text()
+    for page_num, page in enumerate(reader.pages):
+        raw_text = page.extract_text()
+        cleaned_text = clean_text(raw_text)
 
-        if not text:
+        # Skip empty or useless pages
+        if not cleaned_text or len(cleaned_text) < 50:
             continue
 
-        doc = Document(
-            page_content=text,
-            metadata={
-                "source": pdf_path.name,
-                "page": page_number + 1
-            }
+        documents.append(
+            Document(
+                page_content=cleaned_text,
+                metadata={
+                    "source": path.split("/")[-1],
+                    "page": page_num + 1
+                }
+            )
         )
-
-        documents.append(doc)
 
     return documents

@@ -46,6 +46,8 @@ if st.button("Ask"):
 
             st.markdown("### 📄 Sources")
             for src in data.get("sources", []):
-                st.write(f"- {src}")
+                with st.expander(f"{src['source']} — page {src['page']}"):
+                    st.write(src["preview"])
+
         else:
             st.error("API error. Please try again.")

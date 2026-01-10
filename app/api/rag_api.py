@@ -8,9 +8,11 @@ from app.ingestion.pdf_loader import load_pdf
 from app.ingestion.chunker import chunk_documents
 import numpy as np
 
+# ✅ DEFINE ROUTER FIRST
 router = APIRouter(prefix="/rag", tags=["RAG"])
 
-# --- Bootstrap once (simple & effective) ---
+
+# ---------- Bootstrap (runs once on startup) ----------
 docs = load_pdf("data/sample.pdf")
 chunks = chunk_documents(docs)
 
@@ -22,6 +24,7 @@ vector_store = FAISSVectorStore(embedding_dim=len(embeddings[0]))
 vector_store.add(np.array(embeddings), chunks)
 
 graph = build_agent_graph(vector_store)
+# ----------------------------------------------------
 
 
 class QuestionRequest(BaseModel):
@@ -37,8 +40,19 @@ def ask_question(request: QuestionRequest):
         "verified": False
     })
 
+    sources = []
+    for doc in result.get("documents", []):
+        meta = doc.metadata or {}
+        preview = doc.page_content[:200] + "..." if len(doc.page_content) > 200 else doc.page_content
+
+        sources.append({
+            "source": meta.get("source", "unknown"),
+            "page": meta.get("page", "unknown"),
+            "preview": preview
+        })
+
     return {
         "answer": result["answer"],
-        "sources": result.get("documents", []),
-        "verified": result["verified"]
+        "verified": result["verified"],
+        "sources": sources
     }

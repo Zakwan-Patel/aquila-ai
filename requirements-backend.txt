@@ -3,24 +3,21 @@ numpy==1.26.4
 fastapi
 uvicorn
 pydantic
-pydantic_settings
+pydantic-settings
 python-dotenv
 
 langchain
-langgraph
 langchain-core
-langchain_text_splitters
-
-openai
-tiktoken
+langchain-text-splitters
+langgraph
 
 faiss-cpu
 sentence-transformers
 
+openai
+tiktoken
+
 sqlalchemy
 pymysql
 
-streamlit
-
-pytest
 pypdf
