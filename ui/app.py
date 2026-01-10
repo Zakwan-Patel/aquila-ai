@@ -17,7 +17,7 @@ Answers are **grounded**, **verified**, and **source-backed**.
 """
 )
 
-API_URL = "http://127.0.0.1:8000/rag/ask"
+API_URL = "http://backend:8000/rag/ask"
 
 question = st.text_input("Enter your question:")
 
